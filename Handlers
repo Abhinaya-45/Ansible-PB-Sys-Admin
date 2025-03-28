@@ -1,0 +1,26 @@
+---
+- name: Ensure essential packages are installed
+  hosts: web_nodes
+  become: yes
+
+  tasks:
+    - name: Install multiple packages
+      yum:
+        name:
+          - httpd
+          - curl
+          - wget
+        state: present
+      notify:
+        - Restart httpd service
+
+    - name: Ensure httpd service is started
+      service:
+        name: httpd
+        state: started
+
+  handlers:
+    - name: Restart httpd service
+      service:
+        name: httpd
+        state: restarted
