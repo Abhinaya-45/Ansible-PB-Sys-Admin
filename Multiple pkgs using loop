@@ -1,0 +1,18 @@
+---
+- name: Ensure essential packages are installed
+  hosts: web_nodes
+  become: yes
+
+  tasks:
+    - name: Install multiple packages
+      yum:
+        name:
+          - httpd
+          - curl
+          - wget
+        state: present
+
+    - name: Ensure httpd service is started
+      service:
+        name: httpd
+        state: started
