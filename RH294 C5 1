@@ -1,0 +1,47 @@
+---
+- name: Manage Servers
+  hosts: servers
+  become: true
+  tasks:
+     - name: copy files from managed nodes to control node
+       fetch:
+           src: /var/log/file
+           dest: server-bkg
+
+       file:
+           path: /tmp/newdirect
+           state: directory
+           mode: 0775
+           owner: devops
+           group: devops
+           setype: samba_share_t  # _default is the default selinux type
+
+       lineinfile:
+           path: /var/log/file
+           line: This line was added through ansible
+           state: present
+           mode: 0664
+           owner: devops
+           group: devops
+           create: true    # I had missed this
+
+      copy:
+           src: /system
+           dest: /home/devops/files
+           owner: devops
+           group: devops
+           mode: 0664
+
+      blockinfile:
+           path: /var/log/files.txt
+           state: present
+           block: | 
+             This is a 2 line para
+             This has been added using ansible
+             The module used in blockinfile no space
+
+
+
+
+
+
